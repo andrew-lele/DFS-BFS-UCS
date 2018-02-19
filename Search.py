@@ -19,78 +19,100 @@ def makeGraph(i_file):
 
 def BFS(graph, start, end):
 
-	from queue import PriorityQueue
-
+	from collections import deque
 	print("----------BFS---------\n")
-	queue = [[start]]
+	queue = deque([start])
 	print('graph: ' , graph)
 
+	#dictionary of previous nodes with the leading node (key - previous, value - node of path taken) 
+	prev_nodes = {}
+	#list of the nodes for the path taken
 	mapping = []
 
+	#loop through nodes in path until queue is empty
 	while queue:
-		print('queue: ', queue)
-		node = queue.pop(0)
-		# print('node: ', type(node), node,  '\tmapping: ', mapping)
-		if node[-1] not in mapping:
-			# mapping.append(node)
+		# print('queue: ', queue)
+		#grab the current node to inspect for possible paths
+		node = queue.popleft()
+		# print('node: ', node)
+
+		#check if te node leads anywhere
+		if node in graph:
+
+			for neighbor in graph:
+
+				#if explored, ignore it
+				if neighbor in graph[node]:
+					print('gnode: ' , graph[node], '\t neigh: ', neighbor)
+					if neighbor in prev_nodes:
+						continue
+
+					prev_nodes[neighbor] = node
+
+					queue.append(neighbor)
+
+					#if the end is found, return the list
+					if neighbor == end:
+						print("prev node path: " , prev_nodes)
+						
+						mapping.append(neighbor)
+
+						while prev_nodes[end] != start:
+							
+							mapping.append(prev_nodes[end])
+							end = prev_nodes[end]
+
+						mapping.append(start)
+						
+						mapping.reverse()
+
+						return (mapping)
+		#backtrack if a dead-end is hit
+		# if neighbor not in prev_nodes:
+			# del mapping[-1]
 
 
-		# if int(node) == int(end):
-			# return mapping
+def DFS(graph, start, end):
+	from collections import deque
+	print("----------DFS---------\n")
 
-		# neighbors = graph[int(node)]
-###
-		# 	for neighbor in graph[int(node[-1])]:
-		# 		print("here's papa: ", neighbor)
-		# 		paths = list(node)
-		# 		if neighbor not in mapping:
-		# 			queue.append(neighbor)
+	stack = deque([start])
+	prev_nodes = {}
 
-		# 	mapping.append(node[-1])
-		# print("MAP: \t", mapping)
+	mapping = []
+	
+	while stack:
 
-			for neighbor in graph.items():
-				print("here's papa: ", neighbor)
-				paths = list(node)
-				if neighbor[2] not in mapping:
-					queue.append(neighbor[1])
+		node = stack.pop()
 
-			mapping.append(node[-1])
-		# print("MAP: \t", mapping)
-#############################
-	# print('graph: ' , type(graph[1][2]))
-	# explored = []
- #    # keep track of all the paths to be checked
-	# queue = [[start]]
- 
-	# # return path if start is goal
-	# if start == end:
-	# 	return "That was easy! Start = goal"
- 
- #    # keeps looping until all possible paths have been checked
-	# while queue:
-	# 	# pop the first path from the queue
-	# 	path = queue.pop(0)
- #        # get the last node from the path
-	# 	node = path[-1]
-	# 	print("node: ", type(node))
-	# 	if node not in explored:
-	# 		print("node explored: ", node)
-	# 		neighbours = graph[int(node)]
- #            # go through all neighbour nodes, construct a new path and
- #            # push it into the queue
-	# 		for neighbour in neighbours:
-	# 			new_path = list(path)
-	# 			new_path.append(neighbour)
-	# 			queue.append(new_path)
- #                # return path if neighbour is goal
-	# 			if int(neighbour) == end:
-	# 				print("done: " , new_path)
-	# 				return new_path
- 
- #            # mark node as explored
-	# 		explored.append(node)
-	# print('rip: ', explored )
+		if node in graph:
+
+			for neighbor in graph:
+
+				#if explored, ignore it
+				if neighbor in graph[node]:
+
+					prev_nodes[neighbor] = [node]
+					stack.append(neighbor)
+					
+					prev_nodes[neighbor] = node
+
+					#if the end is found, return the list
+					if neighbor == end:
+						mapping.append(neighbor)
+
+						while prev_nodes[end] != start:
+							
+							mapping.append(prev_nodes[end])
+							end = prev_nodes[end]
+
+						mapping.append(start)
+						
+						mapping.reverse()
+
+						return (mapping)
+		#backtrack if a dead-end is hit
+
 	return []
 
 def main(args):
@@ -129,6 +151,9 @@ def main(args):
 
 	if sys.argv[4] == "BFS":
 		mapping = BFS(graph, int(sys.argv[2]), int(sys.argv[3]) )
+
+	elif sys.argv[4] == "DFS":
+		mapping = DFS(graph, int(sys.argv[2]), int(sys.argv[3]) )
 
 	print('\n -----OUTPUT------\n' ,mapping)
 
