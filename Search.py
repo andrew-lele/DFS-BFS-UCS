@@ -115,6 +115,20 @@ def DFS(graph, start, end):
 
 	return []
 
+def UCS(graph, start, end):
+	import heapq
+	queue = []
+
+	#contain the most lit
+	heapq.heappush(queue, (0, [startNode]))
+
+	# while queue:
+	# 	path = heapq.heappop(queue)
+	# 	node = path[1][-1]
+
+	# 	if 
+
+	return []
 def main(args):
 	import sys
 
@@ -154,6 +168,9 @@ def main(args):
 
 	elif sys.argv[4] == "DFS":
 		mapping = DFS(graph, int(sys.argv[2]), int(sys.argv[3]) )
+
+	elif sys.argv[4] == "UCS":
+		mapping = UCS(graph, int(sys.argv[2]), int(sys.argv[3]) )
 
 	print('\n -----OUTPUT------\n' ,mapping)
 
