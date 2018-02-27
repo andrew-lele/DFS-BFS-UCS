@@ -74,7 +74,6 @@ def BFS(graph, start, end):
 
 def DFS(graph, start, end):
 	from collections import deque
-	print("----------DFS---------\n")
 
 	stack = deque([start])
 	prev_nodes = {}
